@@ -1,6 +1,6 @@
 import { promises } from 'fs';
 import xmlParser from 'fast-xml-parser';
-import { includesLowerCase } from './strings';
+import { includesLowerCase, includesLowerCaseArray } from './strings';
 
 /**
  * @typedef {Object<string, any>} RepNatStrRech
@@ -62,10 +62,11 @@ const hasNumero = (address, etabAssocs) => etabAssocs[0] && etabAssocs.some(
 const followsNumeroLabel = (tokens, etabAssocs) => etabAssocs[0]
     && etabAssocs.some(
         (etabAssoc) => {
+            const lowerCaseTokens = tokens.map((t) => t.toLowerCase());
             const { label, numero } = etabAssoc;
-            if (tokens.includes(`${label}${numero}`)) return true;
-            const labelIndex = tokens.indexOf(label);
-            const numeroIndex = tokens.indexOf(String(numero));
+            if (includesLowerCaseArray(tokens, `${label}${numero}`)) return true;
+            const labelIndex = lowerCaseTokens.indexOf(label.toLowerCase());
+            const numeroIndex = lowerCaseTokens.indexOf(String(numero));
             if (labelIndex === -1) return false;
             if (numeroIndex === -1) return false;
             if (numeroIndex < labelIndex) return false;
