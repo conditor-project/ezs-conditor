@@ -112,14 +112,13 @@ const hasTutelle = (address, structure) => {
     if (!structure.etabAssoc) return false;
     if (!structure.etabAssoc[0]) return false;
     const tutelles = structure.etabAssoc
-        .filter((ea) => ea.natTutEtab === 'TUTE')
         .map((ea) => ea.etab);
     return tutelles.reduce((keep, etab) => {
-        if (etab.libelle.startsWith('Université')
-            && address.includes(etab.libelle || '**')) {
-            return true;
-        }
-        if (includesDepleted(address, etab.sigle || '**')
+        if (etab.libelle.startsWith('Université')) {
+            if (address.includes(etab.libelle || '**')) {
+                return true;
+            }
+        } else if (includesDepleted(address, etab.sigle || '**')
             || includesDepleted(address, etab.libelle || '**')) {
             return true;
         }
@@ -158,6 +157,7 @@ export const hasLabelAndNumero = (address, structure) => {
 export const isIn = (address) => (/** {Structure} */structure) => (
     hasEtabAssocs(structure)
     && hasPostalAddress(address, structure)
+    && hasTutelle(address, structure)
     && (
         hasSigle(address, structure)
         || hasIntitule(address, structure)
