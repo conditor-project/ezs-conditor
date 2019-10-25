@@ -2,7 +2,12 @@ import unidecode from 'unidecode';
 import { compose, includes, toLower } from 'ramda';
 
 const removeAccents = (str) => unidecode(str);
-const depleteString = compose(toLower, removeAccents, String);
+/**
+ * Deplete string from accents and upper case.
+ * @param {string} str
+ * @returns {string}
+ */
+export const depleteString = compose(toLower, removeAccents, String);
 
 /**
  * Check whether the lowercase of `haystack` includes the lowercase of `needle`.
