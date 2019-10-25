@@ -1,9 +1,21 @@
 #!/usr/bin/env node
 
 const path = require('path');
+const xmlParser = require('fast-xml-parser');
 const { promises } = require('fs');
-const { getRNSR } = require('../lib/rnsr');
 const { depleteString } = require('../lib/strings');
+
+async function getRNSR() {
+    const RNSRXML = await promises.readFile(`${__dirname}/../data/RNSR.xml`, {
+        encoding: 'utf8',
+    });
+    const RNSR = xmlParser.parse(RNSRXML, {
+        ignoreAttributes: true,
+        ignoreNameSpace: true,
+        trimValues: true,
+    });
+    return RNSR;
+}
 
 /**
  * @param {import('../lib/rnsr').EtabAssoc} etabAssoc

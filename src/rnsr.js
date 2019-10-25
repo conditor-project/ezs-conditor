@@ -1,5 +1,3 @@
-import { promises } from 'fs';
-import xmlParser from 'fast-xml-parser';
 import { includesDepleted, includesDepletedArray } from './strings';
 
 /**
@@ -162,21 +160,3 @@ export const isIn = (address) => (/** {Structure} */structure) => (
         || hasLabelAndNumero(address, structure)
     )
 );
-
-/**
- * Get the RNSR object from the file.
- *
- * @export
- * @returns {Promise<RepNatStrRech>}
- */
-export async function getRNSR() {
-    const RNSRXML = await promises.readFile(`${__dirname}/../data/RNSR.xml`, {
-        encoding: 'utf8',
-    });
-    const RNSR = xmlParser.parse(RNSRXML, {
-        ignoreAttributes: true,
-        ignoreNameSpace: true,
-        trimValues: true,
-    });
-    return RNSR;
-}
