@@ -10,7 +10,7 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "lint": "eslint --ext=.js ./test/*.js ./src/*.js",
+    "lint": "eslint --ext=.js ./test/*.js ./src/*.js ./bin/*.js",
     "prepublish": "npm run build",
     "release": "standard-version",
     "test": "jest"
