@@ -109,8 +109,6 @@ const hasSigle = (address, structure) => includesDepleted(address, structure.sig
  * @returns {boolean}
  */
 const hasTutelle = (address, structure) => {
-    if (!structure.etabAssoc) return false;
-    if (!structure.etabAssoc[0]) return false;
     const tutelles = structure.etabAssoc
         .map((ea) => ea.etab);
     return tutelles.reduce((keep, etab) => {
