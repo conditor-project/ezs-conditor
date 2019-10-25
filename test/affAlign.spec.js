@@ -85,7 +85,7 @@ describe('co-aff-align', () => {
                     authors: [{
                         affiliations: [{
                             address: 'EA4426, Université Bordeaux Montaigne, Médiation, Information, Communication, Art MICA, MSHA, 10 esplanade des antilles, 33607 pessac cedex, FR',
-                            conditorRnsr: ['200919217D'],
+                            conditorRnsr: ['200719511G', '200919217D'],
                         }],
                     }],
                 }]);
