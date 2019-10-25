@@ -18,8 +18,8 @@ import { includesDepleted, includesDepletedArray } from './strings';
  * @property {string} num_nat_struct
  * @property {string} intitule
  * @property {string} sigle
- * @property {number} annee_creation
- * @property {number} an_der_rec
+ * @property {number} [annee_creation]
+ * @property {number} [an_der_rec]
  * @property {number} [an_fermeture]
  * @property {number} code_postal
  * @property {string} ville_postale
@@ -28,22 +28,22 @@ import { includesDepleted, includesDepletedArray } from './strings';
 
 /**
  * @typedef {Object<string, any>} EtabAssoc
- * @property {"TUTE"|"PART"} natTutEtab
+ * @property {"TUTE"|"PART"} [natTutEtab]
  * @property {Etab} etab
- * @property {number} anDebut
+ * @property {number} [anDebut]
  * @property {number} [anFin]
- * @property {string} idStructEtab
+ * @property {string} [idStructEtab]
  * @property {string} label
  * @property {number} numero
  */
 
 /**
  * @typedef {Object<string, any>} Etab
- * @property {string} cleEtab
+ * @property {string} [cleEtab]
  * @property {string} sigle
  * @property {string} libelle
- * @property {string} numUAI
- * @property {string} SirenSiret
+ * @property {string} [numUAI]
+ * @property {string} [SirenSiret]
  */
 
 const hasLabel = (address, etabAssocs) => etabAssocs[0] && etabAssocs.some(
@@ -128,6 +128,17 @@ const hasTutelle = (address, structure) => {
 };
 
 /**
+ * Checks that structure has etabAssocs
+ * @param {Structure} structure
+ * @returns {boolean}
+ */
+const hasEtabAssocs = (structure) => {
+    if (!structure.etabAssoc) return false;
+    if (!structure.etabAssoc[0]) return false;
+    return true;
+};
+
+/**
  * Say if the `structure` is in `address` according to the presence of label and
  * numero.
  *
@@ -145,8 +156,8 @@ export const hasLabelAndNumero = (address, structure) => {
 };
 
 export const isIn = (address) => (/** {Structure} */structure) => (
-    hasPostalAddress(address, structure)
-    && hasTutelle(address, structure)
+    hasEtabAssocs(structure)
+    && hasPostalAddress(address, structure)
     && (
         hasSigle(address, structure)
         || hasIntitule(address, structure)

@@ -1,7 +1,7 @@
-import { isIn, getRNSR } from './rnsr';
+import { isIn } from './rnsr';
 
 /** @type {import('./rnsr').RepNatStrRech} RNSR */
-let RNSR;
+import RNSR from '../data/RNSR.json';
 
 /**
  * @typedef {Object<string, any>} Affiliation
@@ -61,9 +61,6 @@ export default async function affAlign(data, feed) {
     }
     if (!data.authors) {
         return feed.send(new Error('affAlign: notice should have authors'));
-    }
-    if (!RNSR) {
-        RNSR = await getRNSR();
     }
     const authors = data.authors.reduce(addRnsrInAuthor, []);
     const notice = { ...data, authors };
