@@ -2,6 +2,7 @@
 
 const csv = require('csv-string');
 const { promises } = require('fs');
+const { intersection } = require('ramda');
 const { depleteString } = require('../lib/strings');
 const { isIn } = require('../lib/rnsr');
 const RNSR = require('../data/RNSR.json');
@@ -19,21 +20,25 @@ getTSV()
         console.log('found\texpected\taddress');
         // console.log(rnsrAddresses);
         // rnsrAddresses = rnsrAddresses.slice(1, 101);
-        const addressesNb = rnsrAddresses.length;
+        rnsrAddresses = rnsrAddresses.slice(1);
+        let expectedNb = 0;
         const found = rnsrAddresses.reduce((alreadyFound, rnsrAddress) => {
             const depletedAddress = depleteString(rnsrAddress[1]);
             const isInAddress = isIn(depletedAddress);
             const rnsrIds = RNSR.structures.structure
                 .filter(isInAddress)
                 .map((s) => s.num_nat_struct);
-            const isFound = rnsrIds.includes(rnsrAddress[0]);
-            if (!isFound) {
-                console.log(`${rnsrIds}\t${rnsrAddress[0]}\t${depletedAddress}`);
+            const expectedIds = rnsrAddress[0].split(' ; ');
+            expectedNb += expectedIds.length;
+            // const isFound = rnsrIds.includes(rnsrAddress[0]);
+            const foundIds = intersection(rnsrIds, expectedIds);
+            if (foundIds.length < expectedIds.length) {
+                console.log(`${rnsrIds}\t${expectedIds}\t${depletedAddress}`);
             }
-            return alreadyFound + (isFound ? 1 : 0);
+            return alreadyFound + foundIds.length;
         }, 0);
-        const recall = found / addressesNb;
+        const recall = found / expectedNb;
         console.log('recall:', recall);
         console.log('found:', found);
-        console.log('total:', addressesNb);
+        console.log('total:', expectedNb);
     });
