@@ -77,10 +77,9 @@ getRNSR()
         const simplifiedRnsr = { structures: { structure: simplifiedStructures } };
         return simplifiedRnsr;
     })
-    .then((simplifiedRnsr) => {
-        return promises
-            .writeFile(path.join(__dirname, '../data/RNSR.json'), JSON.stringify(simplifiedRnsr), { encoding: 'utf8' });
-    })
+    .then((simplifiedRnsr) => promises
+        .writeFile(path.join(__dirname, '../data/RNSR.json'), JSON.stringify(simplifiedRnsr), { encoding: 'utf8' }))
     .then(() => {
+        // eslint-disable-next-line no-console
         console.log('data/RNSR.json updated');
     });

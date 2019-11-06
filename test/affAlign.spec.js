@@ -74,7 +74,8 @@ describe('co-aff-align', () => {
         from([{
             authors: [{
                 affiliations: [{
-                    address: 'EA4426, Université Bordeaux Montaigne, Médiation, Information, Communication, Art MICA, MSHA, 10 esplanade des antilles, 33607 pessac cedex, FR',
+                    address: 'EA4426, Université Bordeaux Montaigne, Médiation, Information, Communication, Art MICA,'
+                        + ' MSHA, 10 esplanade des antilles, 33607 pessac cedex, FR',
                 }],
             }],
         }])
@@ -84,7 +85,8 @@ describe('co-aff-align', () => {
                 expect(res).toEqual([{
                     authors: [{
                         affiliations: [{
-                            address: 'EA4426, Université Bordeaux Montaigne, Médiation, Information, Communication, Art MICA, MSHA, 10 esplanade des antilles, 33607 pessac cedex, FR',
+                            address: 'EA4426, Université Bordeaux Montaigne, Médiation, Information, Communication,'
+                                + ' Art MICA, MSHA, 10 esplanade des antilles, 33607 pessac cedex, FR',
                             conditorRnsr: ['200719511G', '200919217D'],
                         }],
                     }],
