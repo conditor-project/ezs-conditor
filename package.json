@@ -5,7 +5,9 @@
   "main": "lib/index.js",
   "bin": {
     "affAlign": "./bin/affAlign.js",
-    "compareRnsr": "./bin/compareRnsr.js"
+    "compareRnsr": "./bin/compareRnsr.js",
+    "findIdsInAddresses": "./bin/findIdsInAddresses.js",
+    "prepareRnsrJson": "./bin/prepareRnsrJson.js"
   },
   "scripts": {
     "build": "babel src --out-dir lib",
