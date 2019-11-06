@@ -1,4 +1,5 @@
 import { isIn } from './rnsr';
+import { depleteString } from './strings';
 
 /** @type {import('./rnsr').RepNatStrRech} RNSR */
 import RNSR from '../data/RNSR.json';
@@ -31,7 +32,7 @@ import RNSR from '../data/RNSR.json';
  * @returns {Affiliation[]}
  */
 const addRnsrInAffiliation = (affiliations, affiliation) => {
-    const isInAddress = isIn(affiliation.address);
+    const isInAddress = isIn(depleteString(affiliation.address));
     const conditorRnsr = RNSR.structures.structure
         .filter(isInAddress)
         .map((s) => s.num_nat_struct);

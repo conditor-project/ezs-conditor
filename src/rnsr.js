@@ -1,5 +1,3 @@
-import { includesDepleted, includesDepletedArray } from './strings';
-
 /**
  * @typedef {Object<string, any>} RepNatStrRech
  * @property {Structures} structures
@@ -15,12 +13,15 @@ import { includesDepleted, includesDepletedArray } from './strings';
  * @typedef {Object<string, any>} Structure
  * @property {string} num_nat_struct
  * @property {string} intitule
+ * @property {string} intituleAppauvri
  * @property {string} sigle
+ * @property {string} sigleAppauvri
  * @property {number} [annee_creation]
  * @property {number} [an_der_rec]
  * @property {number} [an_fermeture]
  * @property {number} code_postal
  * @property {string} ville_postale
+ * @property {string} ville_postale_appauvrie
  * @property {EtabAssoc[]} etabAssoc
  */
 
@@ -32,6 +33,7 @@ import { includesDepleted, includesDepletedArray } from './strings';
  * @property {number} [anFin]
  * @property {string} [idStructEtab]
  * @property {string} label
+ * @property {string} labelAppauvri
  * @property {number} numero
  */
 
@@ -39,32 +41,33 @@ import { includesDepleted, includesDepletedArray } from './strings';
  * @typedef {Object<string, any>} Etab
  * @property {string} [cleEtab]
  * @property {string} sigle
+ * @property {string} sigleAppauvri
  * @property {string} libelle
+ * @property {string} libelleAppauvri
  * @property {string} [numUAI]
  * @property {string} [SirenSiret]
  */
 
 const hasLabel = (address, etabAssocs) => etabAssocs[0] && etabAssocs.some(
-    (etabAssoc) => includesDepleted(address, etabAssoc.label || '**'),
+    (etabAssoc) => address.includes(etabAssoc.labelAppauvri || '**'),
 );
 const hasNumero = (address, etabAssocs) => etabAssocs[0] && etabAssocs.some(
-    (etabAssoc) => includesDepleted(address, String(etabAssoc.numero) || '**'),
+    (etabAssoc) => address.includes(String(etabAssoc.numero) || '**'),
 );
 /**
  * Say if numero follows label (optionnally with one token between both, or
  * without separator).
- * @param {string[]} tokens
+ * @param {string[]} tokens depleted tokens (lowercase, without accents)
  * @param {EtabAssoc[]} etabAssocs
  * @returns {boolean}
  */
 const followsNumeroLabel = (tokens, etabAssocs) => etabAssocs[0]
     && etabAssocs.some(
         (etabAssoc) => {
-            const lowerCaseTokens = tokens.map((t) => t.toLowerCase());
-            const { label, numero } = etabAssoc;
-            if (includesDepletedArray(tokens, `${label}${numero}`)) return true;
-            const labelIndex = lowerCaseTokens.indexOf(label.toLowerCase());
-            const numeroIndex = lowerCaseTokens.indexOf(String(numero));
+            const { labelAppauvri: label, numero } = etabAssoc;
+            if (tokens.includes(`${label}${numero}`)) return true;
+            const labelIndex = tokens.indexOf(label.toLowerCase());
+            const numeroIndex = tokens.indexOf(String(numero));
             if (labelIndex === -1) return false;
             if (numeroIndex === -1) return false;
             if (numeroIndex < labelIndex) return false;
@@ -73,8 +76,8 @@ const followsNumeroLabel = (tokens, etabAssocs) => etabAssocs[0]
         },
     );
 const hasPostalAddress = (address, structure) => (
-    includesDepleted(address, structure.ville_postale || '**')
-    || includesDepleted(address, String(structure.code_postal) || '**')
+    address.includes(structure.ville_postale_appauvrie || '**')
+    || address.includes(String(structure.code_postal) || '**')
 );
 
 /**
@@ -85,7 +88,7 @@ const hasPostalAddress = (address, structure) => (
  * @param {Structure} structure
  * @returns {boolean}
  */
-const hasIntitule = (address, structure) => includesDepleted(address, structure.intitule || '**');
+const hasIntitule = (address, structure) => address.includes(structure.intituleAppauvri || '**');
 
 /**
  * Say if the `structure` is in `address` according to the presence of sigle.
@@ -94,7 +97,7 @@ const hasIntitule = (address, structure) => includesDepleted(address, structure.
  * @param {Structure} structure
  * @returns {boolean}
  */
-const hasSigle = (address, structure) => includesDepleted(address, structure.sigle || '**');
+const hasSigle = (address, structure) => address.includes(structure.sigleAppauvri || '**');
 
 /**
  * Check that for at least one of the tutelles (`structure.etabAssoc.*.etab`):
@@ -110,12 +113,12 @@ const hasTutelle = (address, structure) => {
     const tutelles = structure.etabAssoc
         .map((ea) => ea.etab);
     return tutelles.reduce((keep, etab) => {
-        if (etab.libelle.startsWith('Université')) {
-            if (address.includes(etab.libelle || '**')) {
+        if (etab.libelleAppauvri.startsWith('universit')) {
+            if (address.includes(etab.libelleAppauvri || '**')) {
                 return true;
             }
-        } else if (includesDepleted(address, etab.sigle || '**')
-            || includesDepleted(address, etab.libelle || '**')) {
+        } else if (address.includes(etab.sigleAppauvri || '**')
+            || address.includes(etab.libelleAppauvri || '**')) {
             return true;
         }
         return keep;
@@ -150,6 +153,13 @@ export const hasLabelAndNumero = (address, structure) => {
     return true;
 };
 
+/**
+ * Check whether or not the `structure` is found in the `address`.
+ *
+ * @export
+ * @param {string}  address depleted address (without accents, lowercase)
+ * @returns {Function} a function that look for the `structure` within `address`
+ */
 export const isIn = (address) => (/** {Structure} */structure) => (
     hasEtabAssocs(structure)
     && hasPostalAddress(address, structure)
