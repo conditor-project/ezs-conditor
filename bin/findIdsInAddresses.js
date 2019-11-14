@@ -31,10 +31,12 @@ promises
             expectedNb += expectedIds.length;
 
             const foundIds = intersection(rnsrIds, expectedIds);
+            const wronglyFoundIds = difference(rnsrIds, expectedIds);
             if (foundIds.length < expectedIds.length) {
                 console.log(`${rnsrIds}\t${expectedIds}\t${depletedAddress}`);
+            } else if (wronglyFoundIds.length) {
+                console.log(`${rnsrIds}\t${expectedIds}\t${depletedAddress}`);
             }
-            const wronglyFoundIds = difference(rnsrIds, expectedIds);
             return {
                 foundNb: alreadyFound + foundIds.length,
                 wronglyFoundNb: alreadyWronglyFound + wronglyFoundIds.length,
