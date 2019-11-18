@@ -6,6 +6,10 @@
 
 Instructions EZS pour Conditor.
 
+_Ce paquet est obsolète, utilisez [@ezs/conditor](https://github.com/Inist-CNRS/ezs/tree/master/packages/conditor)._
+
+_This package has been renamed, and is deprecated, please use [@ezs/conditor](https://github.com/Inist-CNRS/ezs/tree/master/packages/conditor#readme)._
+
 ## Installation
 
 ```bash
